@@ -10,14 +10,14 @@ class Frame:
         self.type = FrameTypes.UNPLAYED
 
     def play(self):
-        self.first_roll = self.__roll()
+        self.first_roll = self._roll()
         pins_left = self.PINS - self.first_roll
         if pins_left:
-            self.second_roll = self.roll(pins_left)
+            self.second_roll = self._roll(pins_left)
         self.__check_type()
 
     @staticmethod
-    def __roll(pins_left=PINS):
+    def _roll(pins_left=PINS):
         return randint(0, pins_left)
 
     def __pins_down(self):
@@ -46,3 +46,11 @@ class TenthFrame(Frame):
         super().play()
         if self.type == FrameTypes.SPARE:
             self.third_roll = self._roll()
+        elif self.type == FrameTypes.STRIKE:
+            self.second_roll = self._roll()
+            pins_left = self.PINS - self.second_roll
+            if pins_left:
+                self.third_roll = self._roll(pins_left)
+            else:
+                self.third_roll = self._roll()
+            
